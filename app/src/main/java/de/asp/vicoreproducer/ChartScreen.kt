@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -15,28 +16,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
+import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
-import com.patrykandpatrick.vico.compose.common.shape.rounded
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
-import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
-import com.patrykandpatrick.vico.core.common.Fill
-import com.patrykandpatrick.vico.core.common.Insets
-import com.patrykandpatrick.vico.core.common.Position
-import com.patrykandpatrick.vico.core.common.component.LineComponent
-import com.patrykandpatrick.vico.core.common.component.ShapeComponent
-import com.patrykandpatrick.vico.core.common.component.TextComponent
-import com.patrykandpatrick.vico.core.common.shape.CorneredShape
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.Insets
+import com.patrykandpatrick.vico.compose.common.Position
+import com.patrykandpatrick.vico.compose.common.component.LineComponent
+import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
+import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import de.asp.vicoreproducer.composables.StepperRow
 
 @Composable
@@ -121,8 +119,8 @@ private fun AudioLevelChart(
             decorations = listOf(
                 getHorizontalLine(
                     thresholdPercent.toDouble(),
-                    MaterialTheme.colorScheme.error.toArgb(),
-                    MaterialTheme.colorScheme.onError.toArgb(),
+                    MaterialTheme.colorScheme.error,
+                    MaterialTheme.colorScheme.onError,
 
                     )
             ),
@@ -137,20 +135,20 @@ private fun AudioLevelChart(
 
 private fun getHorizontalLine(
     thresholdValue: Double,
-    lineColor: Int,
-    textColor: Int,
+    lineColor: Color,
+    textColor: Color,
 ): HorizontalLine {
     val fill = Fill(lineColor)
     return HorizontalLine(
         y = { thresholdValue },
-        line = LineComponent(fill = fill, thicknessDp = 1f),
+        line = LineComponent(fill = fill, thickness = 1.dp),
         labelComponent = TextComponent(
-            color = textColor,
-            margins = Insets(startDp = 6f),
-            padding = Insets(startDp = 8f, endDp = 8f, bottomDp = 2f),
+            textStyle = TextStyle.Default.copy(color = textColor),
+            margins = Insets(start = 6.dp),
+            padding = Insets(start = 8.dp, end = 8.dp, bottom = 2.dp),
             background = ShapeComponent(
                 fill,
-                CorneredShape.rounded(bottomLeft = 4.dp, bottomRight = 4.dp)
+                RoundedCornerShape(bottomStart = 4.dp, bottomEnd = 4.dp)
             ),
         ),
         label = { "Threshold" },
